@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="280dp" android:layout_height="284dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ImageView
+                android:id="@+id/closeButton"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="closeRateDialog"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_cancel_cross"/>
+
+        <TextView
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="29dp"
+                android:layout_marginTop="82dp"
+                android:layout_marginEnd="29dp"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center"
+                android:text="@string/stars_dialog_message"
+                android:textColor="#292929"
+                android:textSize="20sp"
+                app:autoSizeMaxTextSize="20sp"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+                android:id="@+id/star1ImageView"
+                style="@style/BlackStar"
+                android:layout_marginLeft="11dp"
+                android:layout_marginTop="33dp"
+                android:layout_marginBottom="77dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/star2ImageView"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"/>
+
+        <ImageView
+                android:id="@+id/star2ImageView"
+                style="@style/BlackStar"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/star1ImageView"
+                app:layout_constraintEnd_toStartOf="@+id/star3ImageView"
+                app:layout_constraintStart_toEndOf="@+id/star1ImageView"
+                app:layout_constraintTop_toTopOf="@+id/star1ImageView"/>
+
+        <ImageView
+                android:id="@+id/star3ImageView"
+                style="@style/BlackStar"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/star2ImageView"
+                app:layout_constraintEnd_toStartOf="@+id/star4ImageView"
+                app:layout_constraintStart_toEndOf="@+id/star2ImageView"
+                app:layout_constraintTop_toTopOf="@+id/star2ImageView"/>
+
+        <ImageView
+                android:id="@+id/star4ImageView"
+                style="@style/YellowStar"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/star3ImageView"
+                app:layout_constraintEnd_toStartOf="@+id/star5ImageView"
+                app:layout_constraintStart_toEndOf="@+id/star3ImageView"
+                app:layout_constraintTop_toTopOf="@+id/star3ImageView"/>
+
+
+        <ImageView
+                android:id="@+id/star5ImageView"
+                style="@style/YellowStar"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="11dp"
+                app:layout_constraintBottom_toBottomOf="@+id/star4ImageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/star4ImageView"
+                app:layout_constraintTop_toTopOf="@+id/star4ImageView"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
