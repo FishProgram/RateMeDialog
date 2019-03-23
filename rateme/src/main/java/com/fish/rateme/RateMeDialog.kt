@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference
 
 class RateMeDialog(context: Activity, intentReturnCode: Int = 989, var countInvokeToDisplay: Int = 4) {
     companion object {
-
+        private const val KEY_DISPLAYED = "KEY_DISPLAYED"
         private const val KEY_COUNT_INVOKE = "KEY_COUNT_INVOKE"
     }
 
@@ -21,12 +21,34 @@ class RateMeDialog(context: Activity, intentReturnCode: Int = 989, var countInvo
     private val context = WeakReference(context)
     private lateinit var rateDialog: AlertDialog
 
-
-    fun invokeIfNeed(preferences: SharedPreferences){
-        if(needDisplay(preferences))
-        {
-            if(::rateDialog.isInitialized.not()){
+    enum class DISPLAY_POLITIC() {
+        FIRST_SHOW,
+        PERIODIC
+    }
+    fun checkNeedDisplay(preferences: SharedPreferences, displayPolitic: DISPLAY_POLITIC)=when (displayPolitic) {
+        DISPLAY_POLITIC.PERIODIC -> {
+            if (countInvokeToDisplay < 1) {
+                true
+            } else {
+                val prevCountInvoke = preferences.getInt(KEY_COUNT_INVOKE, 0)
+                prevCountInvoke > 0 && (prevCountInvoke + 1).rem(countInvokeToDisplay) == 0
+            }
+        }
+        DISPLAY_POLITIC.FIRST_SHOW -> {
+            val displayed = preferences.getBoolean(KEY_DISPLAYED, false)
+            displayed.not()
+        }
+        else -> false
+    }
+    fun invokeIfNeed(preferences: SharedPreferences, displayPolitic: DISPLAY_POLITIC,closeCallBack:(()->Unit)?=null) {
+        if (needDisplay(preferences, displayPolitic)) {
+            if (::rateDialog.isInitialized.not()) {
                 initRateDialog()
+            }
+            if(closeCallBack!=null) {
+                rateDialog.setOnDismissListener {
+                    closeCallBack.invoke()
+                }
             }
             rateDialog.show()
 
@@ -50,18 +72,32 @@ class RateMeDialog(context: Activity, intentReturnCode: Int = 989, var countInvo
     }
 
 
-    private fun needDisplay(preferences: SharedPreferences) = if (countInvokeToDisplay < 1) {
-        true
-    } else {
-        val prevCountInvoke = preferences.getInt(KEY_COUNT_INVOKE, 0)
-        if (prevCountInvoke > 0 && (prevCountInvoke + 1).rem(countInvokeToDisplay) == 0) {
-            preferences.edit().putInt(KEY_COUNT_INVOKE, 0).apply()
-            true
-        } else {
-            preferences.edit().putInt(KEY_COUNT_INVOKE, prevCountInvoke + 1).apply()
-            false
+    private fun needDisplay(preferences: SharedPreferences, displayPolitic: DISPLAY_POLITIC): Boolean =
+        when (displayPolitic) {
+            DISPLAY_POLITIC.PERIODIC -> {
+                if (countInvokeToDisplay < 1) {
+                    true
+                } else {
+                    val prevCountInvoke = preferences.getInt(KEY_COUNT_INVOKE, 0)
+                    if (prevCountInvoke > 0 && (prevCountInvoke + 1).rem(countInvokeToDisplay) == 0) {
+                        preferences.edit().putInt(KEY_COUNT_INVOKE, 0).apply()
+                        true
+                    } else {
+                        preferences.edit().putInt(KEY_COUNT_INVOKE, prevCountInvoke + 1).apply()
+                        false
+                    }
+                }
+            }
+            DISPLAY_POLITIC.FIRST_SHOW -> {
+                val displayed = preferences.getBoolean(KEY_DISPLAYED, false)
+                if (displayed.not()) {
+                    preferences.edit().putBoolean(KEY_DISPLAYED, true).apply()
+                    true
+                } else
+                    false
+            }
+            else -> false
         }
-    }
 
 
     private fun closeRateDialog() {
